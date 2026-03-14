@@ -1,0 +1,31 @@
+{
+  description = "Booklore Flake";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    booklore-src = {
+      url = "github:booklore-app/booklore";
+      flake = false;
+    };
+  };
+
+  outputs =
+    {
+      self,
+      nixpkgs,
+      booklore-src,
+    }:
+    let
+      inherit (nixpkgs) lib;
+      systems = lib.systems.flakeExposed;
+      pkgsFor = lib.genAttrs systems (system: import nixpkgs { inherit system; });
+      forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
+    in
+    {
+      packages = forEachSystem (pkgs: rec {
+        default = booklore;
+        booklore = pkgs.callPackage ./booklore.nix { inherit booklore-src; };
+      });
+    };
+
+}
