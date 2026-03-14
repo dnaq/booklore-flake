@@ -1,0 +1,45 @@
+{
+  "nodes": {
+    "booklore-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1773454768,
+        "narHash": "sha256-8as/D34nwVcO5JwkBqq4ougGtC7aw6u6utekTwH9tx8=",
+        "owner": "booklore-app",
+        "repo": "booklore",
+        "rev": "e5c62095b81da6e920f0e83e5f4bff2fc845911b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "booklore-app",
+        "ref": "master",
+        "repo": "booklore",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1773646010,
+        "narHash": "sha256-iYrs97hS7p5u4lQzuNWzuALGIOdkPXvjz7bviiBjUu8=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "5b2c2d84341b2afb5647081c1386a80d7a8d8605",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "booklore-src": "booklore-src",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
