@@ -27,7 +27,7 @@ with lib;
 
     package = mkOption {
       type = types.package;
-      default = self.packages.${pkgs.system}.booklore;
+      default = self.packages.${pkgs.stdenv.hostPlatform.system}.booklore;
       description = "Booklore package";
     };
 
