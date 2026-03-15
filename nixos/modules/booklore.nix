@@ -120,9 +120,7 @@ with lib;
           "/var/lib/booklore/books:/books"
           "/var/lib/booklore/bookdrop:/bookdrop"
         ];
-        BindReadOnlyPaths = [
-          "/nix/store:/nix/store"
-        ];
+        PrivateMounts = "true";
       };
       environment = {
         DATABASE_URL = "jdbc:mariadb://${cfg.database.host}:${builtins.toString config.services.mysql.settings.mysqld.port}/booklore";
