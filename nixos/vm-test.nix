@@ -12,4 +12,5 @@
     memorySize = 4096;
     cores = 2;
   };
+  system.stateVersion = "26.06";
 }

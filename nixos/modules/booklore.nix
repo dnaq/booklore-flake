@@ -7,27 +7,26 @@ self:
   ...
 }:
 
-with lib;
-
 let
   cfg = config.services.booklore;
 in
+with lib;
 {
   options.services.booklore = {
     enable = mkEnableOption "Booklore service";
 
-    user = lib.mkOption {
-      type = lib.types.str;
+    user = mkOption {
+      type = types.str;
       default = "booklore";
     };
 
-    group = lib.mkOption {
-      type = lib.types.str;
+    group = mkOption {
+      type = types.str;
       default = "booklore";
     };
 
-    package = lib.mkOption {
-      type = lib.types.package;
+    package = mkOption {
+      type = types.package;
       default = self.packages.${pkgs.system}.booklore;
       description = "Booklore package";
     };
