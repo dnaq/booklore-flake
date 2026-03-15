@@ -34,7 +34,7 @@ with lib;
     database = {
       host = mkOption {
         type = types.str;
-        default = "127.0.0.1";
+        default = "localhost";
       };
 
       passwordFile = mkOption {
@@ -125,7 +125,7 @@ with lib;
         ];
       };
       environment = {
-        DATABASE_URL = "jdbc:mariadb://127.0.0.1:${builtins.toString config.services.mysql.settings.mysqld.port}/booklore";
+        DATABASE_URL = "jdbc:mariadb://${cfg.database.host}:${builtins.toString config.services.mysql.settings.mysqld.port}/booklore";
         DATABASE_USERNAME = cfg.database.user;
       };
     };
