@@ -22,10 +22,18 @@
       forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
     in
     {
+      nixosModules.booklore = import ./nixos/modules/booklore.nix self;
       packages = forEachSystem (pkgs: rec {
         default = booklore;
         booklore = pkgs.callPackage ./booklore.nix { inherit inputs; };
         update = pkgs.callPackage ./update.nix { inherit inputs; };
       });
+      nixosConfigurations.vm = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          self.nixosModules.booklore
+          ./nixos/vm-test.nix
+        ];
+      };
     };
 }
