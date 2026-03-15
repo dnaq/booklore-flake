@@ -126,7 +126,7 @@ in
         ];
       };
       environment = {
-        DATABASE_URL = "jdbc:mariadb://127.0.0.1:3306/booklore";
+        DATABASE_URL = "jdbc:mariadb://127.0.0.1:${builtins.toString config.services.mysql.settings.mysqld.port}/booklore";
         DATABASE_USERNAME = cfg.database.user;
       };
     };
