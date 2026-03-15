@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     booklore-src = {
-      url = "github:booklore-app/booklore";
+      url = "github:booklore-app/booklore?ref=master";
       flake = false;
     };
   };
@@ -14,7 +14,7 @@
       self,
       nixpkgs,
       booklore-src,
-    }:
+    }@inputs:
     let
       inherit (nixpkgs) lib;
       systems = lib.systems.flakeExposed;
@@ -24,8 +24,7 @@
     {
       packages = forEachSystem (pkgs: rec {
         default = booklore;
-        booklore = pkgs.callPackage ./booklore.nix { inherit booklore-src; };
+        booklore = pkgs.callPackage ./booklore.nix { inherit inputs; };
       });
     };
-
 }
