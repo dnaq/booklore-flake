@@ -70,7 +70,10 @@ in
     };
 
     systemd.services.booklore-init-db = {
-      wants = [ "mysql.service" ];
+      requires = [
+        "mysql.service"
+        "network-online.target"
+      ];
       after = [ "mysql.service" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
@@ -99,9 +102,14 @@ in
     systemd.services.booklore = {
       description = "Booklore";
       wantedBy = [ "multi-user.target" ];
-      wants = [
+      requires = [
         "mysql.service"
+        "booklore-init-db.service"
         "network-online.target"
+      ];
+      after = [
+        "mysql.service"
+        "booklore-init-db.service"
       ];
       serviceConfig = {
         User = cfg.user;
