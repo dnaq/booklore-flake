@@ -1,0 +1,41 @@
+name: update-dependencies
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 3 * * *'
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - name: Install Nix
+        uses: cachix/install-nix-action@1ca7d21a94afc7c957383a2d217460d980de4934
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            substituters = https://cache.garnix.io https://cache.nixos.org
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
+      - name: Update flake.lock
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          nix flake update --commit-lock-file --commit-lockfile-summary "flake.lock: Update"
+      - name: Update gradle dependencies
+        run: |
+          # This allows bwrap to create the sandbox without needing sudo
+          sudo sysctl -w kernel.unprivileged_userns_clone=1
+          # On newer Ubuntu runners (24.04+), you might also need this:
+          echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns || true
+          nix build .#booklore.mitmCache.updateScript
+          ./result
+          git add deps.json && git commit -m 'update gradle dependencies' || true
+      - name: Build flake
+        run: |
+          nix build --show-trace
+      - name: Push to main
+        run: |
+          git push
