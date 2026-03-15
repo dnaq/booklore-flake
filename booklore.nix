@@ -15,7 +15,7 @@
 }:
 let
   booklore-ui = buildNpmPackage (finalAttrs: {
-    version = "main";
+    version = "master";
     pname = "booklore-ui";
 
     src = "${inputs.booklore-src}/booklore-ui";
@@ -39,7 +39,7 @@ let
   });
 in
 stdenv.mkDerivation (finalAttrs: {
-  version = "main";
+  version = "master";
   pname = "booklore";
 
   gradle = gradle.override {
