@@ -7,7 +7,7 @@
     extraGroups = [ "wheel" ];
   };
   services.booklore.enable = true;
-  services.booklore.database.password = "secret";
+  services.booklore.database.passwordFile = pkgs.writeText "passwordFile" "secret";
   virtualisation.vmVariant.virtualisation = {
     memorySize = 4096;
     cores = 2;
