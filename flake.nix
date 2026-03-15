@@ -25,6 +25,7 @@
       packages = forEachSystem (pkgs: rec {
         default = booklore;
         booklore = pkgs.callPackage ./booklore.nix { inherit inputs; };
+        update = pkgs.callPackage ./update.nix { inherit inputs; };
       });
     };
 }
