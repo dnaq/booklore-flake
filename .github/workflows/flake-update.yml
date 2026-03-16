@@ -7,15 +7,21 @@ on:
 jobs:
   update-dependencies:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
+      - name: Generate GitHub App Token
+        id: generate-token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
+        with:
+          app-id: ${{ secrets.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
       - name: Install Nix
         uses: cachix/install-nix-action@1ca7d21a94afc7c957383a2d217460d980de4934
         with:
-          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          github_access_token: ${{ steps.generate-token.outputs.token }}
           extra_nix_config: |
             substituters = https://cache.garnix.io https://cache.nixos.org
             trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
@@ -32,10 +38,21 @@ jobs:
           echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns || true
           nix build .#booklore.mitmCache.updateScript
           ./result
-          git add deps.json && git commit -m 'update gradle dependencies' || true
-      - name: Build flake
-        run: |
-          nix build --show-trace
-      - name: Push to main
-        run: |
-          git push
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          branch: auto-update/dependencies
+          delete-branch: true
+          title: "chore(deps): update dependencies"
+          body: |
+            Automated dependency updates for Nix and Gradle.
+            - Flake lock updated
+            - Gradle dependencies updated
+          commit-message: "chore: update dependencies"
+      - name: Enable Pull Request Automerge
+        if: steps.cpr.output.pull-request-number != ''
+        run: gh pr merge --auto --merge "${{ steps.cpr.outputs.pull-request-number }}"
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
