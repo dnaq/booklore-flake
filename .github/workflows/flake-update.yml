@@ -29,8 +29,25 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          PRE_HASH=$(git rev-parse HEAD)
           nix flake update --commit-lock-file --commit-lockfile-summary "flake.lock: Update"
+          POST_HASH=$(git rev-parse HEAD)
+
+          if [ "$PRE_HASH" != "$POST_HASH" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            SUMMARY=$(git log -1 --pretty=%B | tail -n +3)
+            {
+              echo "NIX_SUMMARY<<EOF"
+              echo "$SUMMARY"
+              echo "EOF"
+            } >> $GITHUB_ENV
+            git reset --soft HEAD~1
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
       - name: Update gradle dependencies
+        if: steps.nix-update.outputs.changed == 'true'
+        id: gradle-update
         run: |
           # This allows bwrap to create the sandbox without needing sudo
           sudo sysctl -w kernel.unprivileged_userns_clone=1
@@ -38,20 +55,39 @@ jobs:
           echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns || true
           nix build .#booklore.mitmCache.updateScript
           ./result
+
+          if [[ -n $(git status --porcelain deps.json) ]]; then
+            echo "GRADLE_CHANGED=true" >> $GITHUB_ENV
+          fi
+      - name: Prepare PR Metadata
+        if: steps.nix-update.outputs.changed == 'true'
+        id: metadata
+        run: |
+          TITLE="chore(deps): update flake.lock"
+          BODY=$NIX_SUMMARY
+
+          if [[ "$GRADLE_CHANGED" == "true" ]]; then
+            TITLE="chore(deps): update flake.lock and gradle dependencies"
+            BODY="${BODY}\n\nUpdated gradle dependencies (deps.json)"
+          fi
+          {
+            echo "PR_TITLE=$TITLE"
+            echo "PR_BODY<<EOF"
+            echo "$BODY"
+            echo "EOF"
+          } >> $GITHUB_ENV
       - name: Create Pull Request
+        if: steps.nix-update.outputs.changed == 'true'
         id: cpr
         uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0
         with:
           token: ${{ steps.generate-token.outputs.token }}
           branch: auto-update/dependencies
           delete-branch: true
-          title: "chore(deps): update dependencies"
-          body: |
-            Automated dependency updates for Nix and Gradle.
-            - Flake lock updated
-            - Gradle dependencies updated
+          title: ${{ env.PR_TITLE }}
+          body: ${{ env.PR_BODY }}
           commit-message: "chore: update dependencies"
-      - name: Enable Pull Request Automerge
+      - name: Enable Auto-merge (Rebase)
         if: steps.cpr.outputs.pull-request-number != ''
         run: gh pr merge --auto --rebase --delete-branch "${{ steps.cpr.outputs.pull-request-number }}"
         env:
