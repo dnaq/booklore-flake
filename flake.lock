@@ -3,27 +3,26 @@
     "booklore-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1773454768,
+        "lastModified": 1773454051,
         "narHash": "sha256-8as/D34nwVcO5JwkBqq4ougGtC7aw6u6utekTwH9tx8=",
         "owner": "booklore-app",
         "repo": "booklore",
-        "rev": "e5c62095b81da6e920f0e83e5f4bff2fc845911b",
+        "rev": "384512534fe5a2f42d8482a0646337e28ef54e52",
         "type": "github"
       },
       "original": {
         "owner": "booklore-app",
-        "ref": "master",
         "repo": "booklore",
         "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1773646010,
-        "narHash": "sha256-iYrs97hS7p5u4lQzuNWzuALGIOdkPXvjz7bviiBjUu8=",
+        "lastModified": 1773282481,
+        "narHash": "sha256-b/GV2ysM8mKHhinse2wz+uP37epUrSE+sAKXy/xvBY4=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5b2c2d84341b2afb5647081c1386a80d7a8d8605",
+        "rev": "fe416aaedd397cacb33a610b33d60ff2b431b127",
         "type": "github"
       },
       "original": {
