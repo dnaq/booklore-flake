@@ -115,16 +115,18 @@ with lib;
         Group = cfg.group;
         ExecStart = "${pkgs.bash}/bin/bash -c 'export DATABASE_PASSWORD=$(cat $CREDENTIALS_DIRECTORY/db_password); exec ${cfg.package}/bin/booklore'";
         LoadCredential = "db_password:${cfg.database.passwordFile}";
-        BindPaths = [
-          "/var/lib/booklore/data:/app/data"
-          "/var/lib/booklore/books:/books"
-          "/var/lib/booklore/bookdrop:/bookdrop"
-        ];
-        PrivateMounts = "true";
+        # BindPaths = [
+        #   "/var/lib/booklore/data:/app/data"
+        #   "/var/lib/booklore/books:/books"
+        #   "/var/lib/booklore/bookdrop:/bookdrop"
+        # ];
+        # PrivateMounts = "true";
       };
       environment = {
         DATABASE_URL = "jdbc:mariadb://${cfg.database.host}:${builtins.toString config.services.mysql.settings.mysqld.port}/booklore";
         DATABASE_USERNAME = cfg.database.user;
+        APP_PATH_CONFIG="/var/lib/booklore/data";
+        APP_BOOKDROP_FOLDER="/var/lib/booklore/bookdrop";
       };
     };
   };
