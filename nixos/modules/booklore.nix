@@ -15,14 +15,9 @@ with lib;
   options.services.booklore = {
     enable = mkEnableOption "Booklore service";
 
-    user = mkOption {
-      type = types.str;
-      default = "booklore";
-    };
-
-    group = mkOption {
-      type = types.str;
-      default = "booklore";
+    extraGroups = mkOption {
+      type = types.listOf types.str;
+      default = [];
     };
 
     package = mkOption {
@@ -55,13 +50,6 @@ with lib;
   };
 
   config = mkIf cfg.enable {
-    users.users.${cfg.user} = {
-      isSystemUser = true;
-      inherit (cfg) group;
-      home = "/var/lib/booklore";
-      createHome = true;
-    };
-    users.groups.${cfg.group} = { };
 
     services.mysql = {
       enable = mkDefault true;
@@ -92,12 +80,6 @@ with lib;
       '';
     };
 
-    systemd.tmpfiles.rules = [
-      "d /var/lib/booklore/data 0755 booklore booklore -"
-      "d /var/lib/booklore/books 0755 booklore booklore -"
-      "d /var/lib/booklore/bookdrop 0755 booklore booklore -"
-    ];
-
     systemd.services.booklore = {
       description = "Booklore";
       wantedBy = [ "multi-user.target" ];
@@ -111,16 +93,13 @@ with lib;
         "booklore-init-db.service"
       ];
       serviceConfig = {
-        User = cfg.user;
-        Group = cfg.group;
+        DynamicUser = true;
+        User = "booklore";
+        Group = "booklore";
+        SupplementaryGroups = lib.concatStringsSep "" cfg.extraGroups;
+        StateDirectory = "booklore booklore/data booklore/bookdrop booklore/books";
         ExecStart = "${pkgs.bash}/bin/bash -c 'export DATABASE_PASSWORD=$(cat $CREDENTIALS_DIRECTORY/db_password); exec ${cfg.package}/bin/booklore'";
         LoadCredential = "db_password:${cfg.database.passwordFile}";
-        # BindPaths = [
-        #   "/var/lib/booklore/data:/app/data"
-        #   "/var/lib/booklore/books:/books"
-        #   "/var/lib/booklore/bookdrop:/bookdrop"
-        # ];
-        # PrivateMounts = "true";
       };
       environment = {
         DATABASE_URL = "jdbc:mariadb://${cfg.database.host}:${builtins.toString config.services.mysql.settings.mysqld.port}/booklore";
