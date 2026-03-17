@@ -1,19 +1,19 @@
 {
   "nodes": {
-    "booklore-src": {
+    "grimmory-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1773454768,
+        "lastModified": 1773454051,
         "narHash": "sha256-8as/D34nwVcO5JwkBqq4ougGtC7aw6u6utekTwH9tx8=",
-        "owner": "booklore-app",
-        "repo": "booklore",
-        "rev": "e5c62095b81da6e920f0e83e5f4bff2fc845911b",
+        "owner": "grimmory-tools",
+        "repo": "grimmory",
+        "rev": "384512534fe5a2f42d8482a0646337e28ef54e52",
         "type": "github"
       },
       "original": {
-        "owner": "booklore-app",
-        "ref": "master",
-        "repo": "booklore",
+        "owner": "grimmory-tools",
+        "ref": "bl-stable",
+        "repo": "grimmory",
         "type": "github"
       }
     },
@@ -35,7 +35,7 @@
     },
     "root": {
       "inputs": {
-        "booklore-src": "booklore-src",
+        "grimmory-src": "grimmory-src",
         "nixpkgs": "nixpkgs"
       }
     }

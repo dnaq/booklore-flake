@@ -3,8 +3,8 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    booklore-src = {
-      url = "github:booklore-app/booklore?ref=master";
+    grimmory-src = {
+      url = "github:grimmory-tools/grimmory?ref=bl-stable";
       flake = false;
     };
   };
@@ -13,7 +13,7 @@
     {
       self,
       nixpkgs,
-      booklore-src,
+      grimmory-src,
     }@inputs:
     let
       inherit (nixpkgs) lib;

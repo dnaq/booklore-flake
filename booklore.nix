@@ -18,9 +18,9 @@ let
     version = "master";
     pname = "booklore-ui";
 
-    src = "${inputs.booklore-src}/booklore-ui";
+    src = "${inputs.grimmory-src}/booklore-ui";
     npmDeps = importNpmLock {
-      npmRoot = "${inputs.booklore-src}/booklore-ui";
+      npmRoot = "${inputs.grimmory-src}/booklore-ui";
     };
     npmConfigHook = importNpmLock.npmConfigHook;
 
@@ -46,7 +46,7 @@ stdenv.mkDerivation (finalAttrs: {
     javaToolchains = [ jdk25 ];
   };
 
-  src = "${inputs.booklore-src}/booklore-api";
+  src = "${inputs.grimmory-src}/booklore-api";
 
   nativeBuildInputs = [
     yq-go
