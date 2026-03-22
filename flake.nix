@@ -1,10 +1,10 @@
 {
-  description = "Booklore Flake";
+  description = "grimmory Flake";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     grimmory-src = {
-      url = "github:grimmory-tools/grimmory?ref=bl-stable";
+      url = "github:grimmory-tools/grimmory?ref=develop";
       flake = false;
     };
   };
@@ -22,16 +22,16 @@
       forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
     in
     {
-      nixosModules.booklore = import ./nixos/modules/booklore.nix self;
+      nixosModules.grimmory = import ./nixos/modules/grimmory.nix self;
       packages = forEachSystem (pkgs: rec {
-        default = booklore;
-        booklore = pkgs.callPackage ./booklore.nix { inherit inputs; };
+        default = grimmory;
+        grimmory = pkgs.callPackage ./grimmory.nix { inherit inputs; };
         update = pkgs.callPackage ./update.nix { inherit inputs; };
       });
       nixosConfigurations.vm = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
-          self.nixosModules.booklore
+          self.nixosModules.grimmory
           ./nixos/vm-test.nix
         ];
       };

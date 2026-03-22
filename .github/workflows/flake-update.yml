@@ -54,7 +54,7 @@ jobs:
           sudo sysctl -w kernel.unprivileged_userns_clone=1
           # On newer Ubuntu runners (24.04+), you might also need this:
           echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns || true
-          nix build .#booklore.mitmCache.updateScript
+          nix build .#grimmory.mitmCache.updateScript
           ./result
           rm result
 

@@ -31,8 +31,8 @@ let
     '';
 
     meta = {
-      description = "Web UI for Booklore";
-      homepage = "https://github.com/booklore-app/booklore/tree/develop";
+      description = "Web UI for grimmory";
+      homepage = "https://github.com/grimmory-app/grimmory/tree/develop";
       license = lib.licenses.gpl3Only;
       maintainers = with lib.maintainers; [ carter ];
     };
@@ -40,7 +40,7 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   version = "master";
-  pname = "booklore";
+  pname = "grimmory";
 
   gradle = gradle.override {
     javaToolchains = [ jdk25 ];
@@ -75,14 +75,14 @@ stdenv.mkDerivation (finalAttrs: {
 
   postPatch = ''
     mkdir -p src/main/resources/static
-    cp -r ${booklore-ui}/lib/node_modules/booklore/dist/booklore/browser/* src/main/resources/static/
+    cp -r ${booklore-ui}/lib/node_modules/grimmory/dist/grimmory/browser/* src/main/resources/static/
     chmod -R u+w src/main/resources/static
   '';
 
   installPhase = ''
-    mkdir -p $out/{bin,share/booklore}
-    cp build/libs/booklore-api-0.0.1-SNAPSHOT.jar $out/share/booklore/booklore-api-all.jar
-    makeWrapper ${temurin-jre-bin-25}/bin/java $out/bin/booklore \
-    		--add-flags "-jar $out/share/booklore/booklore-api-all.jar"
+    mkdir -p $out/{bin,share/grimmory}
+    cp build/libs/booklore-api-0.0.1-SNAPSHOT.jar $out/share/grimmory/booklore-api-all.jar
+    makeWrapper ${temurin-jre-bin-25}/bin/java $out/bin/grimmory \
+    		--add-flags "-jar $out/share/grimmory/booklore-api-all.jar"
   '';
 })

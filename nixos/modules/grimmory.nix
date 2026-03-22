@@ -1,4 +1,4 @@
-# nixos/modules/booklore.nix
+# nixos/modules/grimmory.nix
 self:
 {
   config,
@@ -8,12 +8,12 @@ self:
 }:
 
 let
-  cfg = config.services.booklore;
+  cfg = config.services.grimmory;
 in
 with lib;
 {
-  options.services.booklore = {
-    enable = mkEnableOption "Booklore service";
+  options.services.grimmory = {
+    enable = mkEnableOption "grimmory service";
 
     extraGroups = mkOption {
       type = types.listOf types.str;
@@ -22,8 +22,8 @@ with lib;
 
     package = mkOption {
       type = types.package;
-      default = self.packages.${pkgs.stdenv.hostPlatform.system}.booklore;
-      description = "Booklore package";
+      default = self.packages.${pkgs.stdenv.hostPlatform.system}.grimmory;
+      description = "grimmory package";
     };
 
     database = {
@@ -39,12 +39,12 @@ with lib;
 
       name = mkOption {
         type = types.str;
-        default = "booklore";
+        default = "grimmory";
       };
 
       user = mkOption {
         type = types.str;
-        default = "booklore";
+        default = "grimmory";
       };
     };
   };
@@ -56,7 +56,7 @@ with lib;
       package = mkDefault pkgs.mariadb;
     };
 
-    systemd.services.booklore-init-db = {
+    systemd.services.grimmory-init-db = {
       requires = [
         "mysql.service"
         "network-online.target"
@@ -80,32 +80,32 @@ with lib;
       '';
     };
 
-    systemd.services.booklore = {
-      description = "Booklore";
+    systemd.services.grimmory = {
+      description = "grimmory";
       wantedBy = [ "multi-user.target" ];
       requires = [
         "mysql.service"
-        "booklore-init-db.service"
+        "grimmory-init-db.service"
         "network-online.target"
       ];
       after = [
         "mysql.service"
-        "booklore-init-db.service"
+        "grimmory-init-db.service"
       ];
       serviceConfig = {
         DynamicUser = true;
-        User = "booklore";
-        Group = "booklore";
+        User = "grimmory";
+        Group = "grimmory";
         SupplementaryGroups = lib.concatStringsSep "" cfg.extraGroups;
-        StateDirectory = "booklore booklore/data booklore/bookdrop booklore/books";
-        ExecStart = "${pkgs.bash}/bin/bash -c 'export DATABASE_PASSWORD=$(cat $CREDENTIALS_DIRECTORY/db_password); exec ${cfg.package}/bin/booklore'";
+        StateDirectory = "grimmory grimmory/data grimmory/bookdrop grimmory/books";
+        ExecStart = "${pkgs.bash}/bin/bash -c 'export DATABASE_PASSWORD=$(cat $CREDENTIALS_DIRECTORY/db_password); exec ${cfg.package}/bin/grimmory'";
         LoadCredential = "db_password:${cfg.database.passwordFile}";
       };
       environment = {
-        DATABASE_URL = "jdbc:mariadb://${cfg.database.host}:${builtins.toString config.services.mysql.settings.mysqld.port}/booklore";
+        DATABASE_URL = "jdbc:mariadb://${cfg.database.host}:${builtins.toString config.services.mysql.settings.mysqld.port}/grimmory";
         DATABASE_USERNAME = cfg.database.user;
-        APP_PATH_CONFIG="/var/lib/booklore/data";
-        APP_BOOKDROP_FOLDER="/var/lib/booklore/bookdrop";
+        APP_PATH_CONFIG="/var/lib/grimmory/data";
+        APP_BOOKDROP_FOLDER="/var/lib/grimmory/bookdrop";
       };
     };
   };
