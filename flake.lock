@@ -3,11 +3,11 @@
     "grimmory-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1774220182,
-        "narHash": "sha256-Hh1ScfymBRw0Wzhww65N0Yno2dqAHqE5gcxzRztDJiw=",
+        "lastModified": 1774279780,
+        "narHash": "sha256-OGSwT+scDOqhO9TBJV7duCZdTl1tVKbJwa0KCPPE+ME=",
         "owner": "grimmory-tools",
         "repo": "grimmory",
-        "rev": "c3c3e20b4ddbef70341f1075c30e4e240efe2647",
+        "rev": "3c7550c505642af78798f39895f7e437f2e0ca6c",
         "type": "github"
       },
       "original": {
@@ -19,11 +19,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1773821835,
-        "narHash": "sha256-TJ3lSQtW0E2JrznGVm8hOQGVpXjJyXY2guAxku2O9A4=",
+        "lastModified": 1774106199,
+        "narHash": "sha256-US5Tda2sKmjrg2lNHQL3jRQ6p96cgfWh3J1QBliQ8Ws=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "b40629efe5d6ec48dd1efba650c797ddbd39ace0",
+        "rev": "6c9a78c09ff4d6c21d0319114873508a6ec01655",
         "type": "github"
       },
       "original": {
