@@ -3,11 +3,11 @@
     "grimmory-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1774279780,
-        "narHash": "sha256-OGSwT+scDOqhO9TBJV7duCZdTl1tVKbJwa0KCPPE+ME=",
+        "lastModified": 1774384606,
+        "narHash": "sha256-rMtbiEiRbwSMfELri4mHbcuP3T860/9qJWQ11L0r19Q=",
         "owner": "grimmory-tools",
         "repo": "grimmory",
-        "rev": "3c7550c505642af78798f39895f7e437f2e0ca6c",
+        "rev": "38bc5610c5f74491f70161ce2bf1354c00fa92ad",
         "type": "github"
       },
       "original": {
